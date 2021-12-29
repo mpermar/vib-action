@@ -18,4 +18,4 @@ outputs:
     description: 'Execution graph result from submitting the pipeline.'
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'
