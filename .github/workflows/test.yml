@@ -5,6 +5,10 @@ on: # rebuild any PRs and main branch changes
     branches:
       - main
       - 'releases/*'
+env:
+  CSP_API_URL: https://console.cloud.vmware.com
+  CSP_API_TOKEN: ${{ secrets.CSP_API_TOKEN }}
+  VIB_PUBLIC_URL: https://cp.bromelia.vmware.com
 
 jobs:
   build: # make sure build/ci work properly
@@ -15,6 +19,7 @@ jobs:
           npm install
       - run: |
           npm run all
+
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +29,3 @@ jobs:
           path: '/'
           config: '.cp'
           pipeline: 'cp-pipeline.json'
-        env:
-          CSP_API_URL: https://console.cloud.vmware.com
-          CSP_API_TOKEN: ${{ secrets.CSP_API_TOKEN }}
-          VIB_PUBLIC_URL: https://cp.bromelia.vmware.com
