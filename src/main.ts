@@ -37,7 +37,7 @@ let cachedCspToken: CspToken | null = null
 
 async function run(): Promise<void> {
   //TODO: Refactor so we don't need to do this check
-  if (process.env['JEST_TESTS'] !== 'true') return // skip running logic when importing class for npm test
+  if (process.env['JEST_TESTS'] === 'true') return // skip running logic when importing class for npm test
 
   await runAction()
 }

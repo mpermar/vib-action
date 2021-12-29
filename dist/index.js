@@ -109,7 +109,7 @@ let cachedCspToken = null;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         //TODO: Refactor so we don't need to do this check
-        if (process.env['JEST_TESTS'] !== 'true')
+        if (process.env['JEST_TESTS'] === 'true')
             return; // skip running logic when importing class for npm test
         yield runAction();
     });
@@ -139,8 +139,8 @@ function runAction() {
                 executionGraph = yield getExecutionGraph(executionGraphId);
             }
             core.info(`Generating action outputs.`);
-            core.setOutput('executionGraphId', executionGraphId);
-            core.setOutput('executionGraph', executionGraph);
+            //TODO: Improve existing tests to verify that outputs are set
+            core.setOutput('execution-graph', executionGraph);
             // TODO: Fetch logs and results
             // TODO: Upload logs and results as artifacts
             if (!Object.values(constants.EndStates).includes(executionGraph['status'])) {
