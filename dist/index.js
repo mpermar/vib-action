@@ -83,11 +83,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.reset = exports.loadConfig = exports.getToken = exports.createPipeline = exports.getExecutionGraph = exports.runAction = void 0;
+exports.reset = exports.loadConfig = exports.getToken = exports.createPipeline = exports.getExecutionGraph = exports.runAction = exports.printLs = void 0;
 const constants = __importStar(__nccwpck_require__(5105));
 const core = __importStar(__nccwpck_require__(2186));
 const path = __importStar(__nccwpck_require__(1017));
@@ -111,25 +118,53 @@ function run() {
         //TODO: Refactor so we don't need to do this check
         if (process.env['JEST_TESTS'] === 'true')
             return; // skip running logic when importing class for npm test
-        // DEBUG
-        // Print context
-        // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
-        const { exec } = __nccwpck_require__(2081);
-        exec('ls -la', (err, stdout, stderr) => {
-            if (err) {
-                //some err occurred
-                core.debug('There has been an error trying to run ls');
-                core.debug(err);
-            }
-            else {
-                // the *entire* stdout and stderr (buffered)
-                core.debug(`stdout: ${stdout}`);
-                core.debug(`stderr: ${stderr}`);
-            }
-        });
+        yield printLs();
         yield runAction();
     });
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function printLs() {
+    var e_1, _a, e_2, _b;
+    return __awaiter(this, void 0, void 0, function* () {
+        core.info('Running ls');
+        // DEBUG
+        // Print context
+        // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
+        const { spawn } = __nccwpck_require__(2081);
+        const child = spawn('ls', ['-a', '-l']);
+        try {
+            for (var _c = __asyncValues(child.stdout), _d; _d = yield _c.next(), !_d.done;) {
+                const data = _d.value;
+                core.info(`stdout: ${data} `);
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) yield _a.call(_c);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        ;
+        core.info('Now listing dot dot');
+        const child2 = spawn('ls', ['-a', '-l', '..']);
+        try {
+            for (var _e = __asyncValues(child2.stdout), _f; _f = yield _e.next(), !_f.done;) {
+                const data = _f.value;
+                core.info(`stdout: ${data} `);
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_f && !_f.done && (_b = _e.return)) yield _b.call(_e);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        ;
+    });
+}
+exports.printLs = printLs;
 //TODO: After generating objects with OpenAPI we should be able to have a Promise<ExecutionGraph>
 //TODO: Enable linter
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
