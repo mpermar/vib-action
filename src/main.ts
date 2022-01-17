@@ -230,11 +230,6 @@ export async function getToken(input: CspInput): Promise<string> {
 
 export async function loadConfig(): Promise<Config> {
 
-
-INPUT_PIPELINE
-
-core.getInput("pipeline")
-
   const pipeline = constants.DEFAULT_PIPELINE
   const baseFolder = constants.DEFAULT_BASE_FOLDER
 
