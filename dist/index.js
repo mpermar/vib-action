@@ -251,9 +251,9 @@ function createPipeline(config) {
         try {
             const folderName = path.join(root, constants.DEFAULT_BASE_FOLDER);
             const filename = path.join(folderName, constants.DEFAULT_PIPELINE);
-            core.debug(`Reading pipeline file from ${filename}`);
+            core.info(`Reading pipeline file from ${filename}`);
             const pipeline = fs_1.default.readFileSync(filename).toString();
-            core.debug(`Sending pipeline: ${util_1.default.inspect(pipeline)}`);
+            core.info(`Sending pipeline: ${util_1.default.inspect(pipeline)}`);
             //TODO: Define and replace different placeholders: e.g. for values, content folders (goss, jmeter), etc.
             const response = yield vibClient.post('/v1/pipelines', pipeline, {
                 headers: { Authorization: `Bearer ${apiToken}` }

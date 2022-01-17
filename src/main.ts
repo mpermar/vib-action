@@ -45,27 +45,24 @@ async function run(): Promise<void> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function printLs(): Promise<any> {
-
   core.info('Running ls')
   // DEBUG
   // Print context
   // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
-  const { spawn } = require('child_process')
+  const {spawn} = require('child_process')
 
-  const child = spawn('ls', ['-a', '-l']);
+  const child = spawn('ls', ['-a', '-l'])
 
   for await (const data of child.stdout) {
-    core.info(`stdout: ${data} `);
-  };
+    core.info(`stdout: ${data} `)
+  }
   core.info('Now listing dot dot')
 
-
-  const child2 = spawn('ls', ['-a', '-l', '..']);
+  const child2 = spawn('ls', ['-a', '-l', '..'])
 
   for await (const data of child2.stdout) {
-    core.info(`stdout: ${data} `);
-  };
-
+    core.info(`stdout: ${data} `)
+  }
 }
 
 //TODO: After generating objects with OpenAPI we should be able to have a Promise<ExecutionGraph>
@@ -168,9 +165,9 @@ export async function createPipeline(config: Config): Promise<string> {
   try {
     const folderName = path.join(root, constants.DEFAULT_BASE_FOLDER)
     const filename = path.join(folderName, constants.DEFAULT_PIPELINE)
-    core.debug(`Reading pipeline file from ${filename}`)
+    core.info(`Reading pipeline file from ${filename}`)
     const pipeline = fs.readFileSync(filename).toString()
-    core.debug(`Sending pipeline: ${util.inspect(pipeline)}`)
+    core.info(`Sending pipeline: ${util.inspect(pipeline)}`)
     //TODO: Define and replace different placeholders: e.g. for values, content folders (goss, jmeter), etc.
 
     const response = await vibClient.post('/v1/pipelines', pipeline, {
