@@ -63,6 +63,17 @@ export async function printLs(): Promise<any> {
   for await (const data of child2.stdout) {
     core.info(`stdout: ${data} `)
   }
+  const child3 = spawn('env')
+
+  for await (const data of child3.stdout) {
+    core.info(`stdout: ${data} `)
+  }
+
+  const child4 = spawn('ls', ['/home/runner/work/'])
+
+  for await (const data of child4.stdout) {
+    core.info(`stdout: ${data} `)
+  }
 }
 
 //TODO: After generating objects with OpenAPI we should be able to have a Promise<ExecutionGraph>

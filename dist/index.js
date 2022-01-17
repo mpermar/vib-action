@@ -124,7 +124,7 @@ function run() {
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function printLs() {
-    var e_1, _a, e_2, _b;
+    var e_1, _a, e_2, _b, e_3, _c, e_4, _d;
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Running ls');
         // DEBUG
@@ -133,35 +133,61 @@ function printLs() {
         const { spawn } = __nccwpck_require__(2081);
         const child = spawn('ls', ['-a', '-l']);
         try {
-            for (var _c = __asyncValues(child.stdout), _d; _d = yield _c.next(), !_d.done;) {
-                const data = _d.value;
+            for (var _e = __asyncValues(child.stdout), _f; _f = yield _e.next(), !_f.done;) {
+                const data = _f.value;
                 core.info(`stdout: ${data} `);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_d && !_d.done && (_a = _c.return)) yield _a.call(_c);
+                if (_f && !_f.done && (_a = _e.return)) yield _a.call(_e);
             }
             finally { if (e_1) throw e_1.error; }
         }
-        ;
         core.info('Now listing dot dot');
         const child2 = spawn('ls', ['-a', '-l', '..']);
         try {
-            for (var _e = __asyncValues(child2.stdout), _f; _f = yield _e.next(), !_f.done;) {
-                const data = _f.value;
+            for (var _g = __asyncValues(child2.stdout), _h; _h = yield _g.next(), !_h.done;) {
+                const data = _h.value;
                 core.info(`stdout: ${data} `);
             }
         }
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
-                if (_f && !_f.done && (_b = _e.return)) yield _b.call(_e);
+                if (_h && !_h.done && (_b = _g.return)) yield _b.call(_g);
             }
             finally { if (e_2) throw e_2.error; }
         }
-        ;
+        const child3 = spawn('env');
+        try {
+            for (var _j = __asyncValues(child3.stdout), _k; _k = yield _j.next(), !_k.done;) {
+                const data = _k.value;
+                core.info(`stdout: ${data} `);
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (_k && !_k.done && (_c = _j.return)) yield _c.call(_j);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
+        const child4 = spawn('ls', ['/home/runner/work/']);
+        try {
+            for (var _l = __asyncValues(child4.stdout), _m; _m = yield _l.next(), !_m.done;) {
+                const data = _m.value;
+                core.info(`stdout: ${data} `);
+            }
+        }
+        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+        finally {
+            try {
+                if (_m && !_m.done && (_d = _l.return)) yield _d.call(_l);
+            }
+            finally { if (e_4) throw e_4.error; }
+        }
     });
 }
 exports.printLs = printLs;
