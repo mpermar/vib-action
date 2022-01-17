@@ -101,7 +101,7 @@ const path = __importStar(__nccwpck_require__(1017));
 const axios_1 = __importDefault(__nccwpck_require__(6545));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const util_1 = __importDefault(__nccwpck_require__(3837));
-const root = path.join(process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE : __dirname, '..');
+const root = path.join(process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE : __dirname, '.');
 const cspClient = axios_1.default.create({
     baseURL: `${process.env.CSP_API_URL}`,
     timeout: 3000,

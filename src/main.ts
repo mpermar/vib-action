@@ -7,7 +7,7 @@ import util from 'util'
 
 const root = path.join(
   process.env.GITHUB_WORKSPACE ? process.env.GITHUB_WORKSPACE : __dirname,
-  '..'
+  '.'
 )
 
 const cspClient = axios.create({
