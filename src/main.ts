@@ -46,6 +46,7 @@ async function run(): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function printLs(): Promise<any> {
 
+  core.info('Running ls')
   // DEBUG
   // Print context
   // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
