@@ -54,15 +54,15 @@ export async function printLs(): Promise<any> {
   const child = spawn('ls', ['-a', '-l']);
 
   for await (const data of child.stdout) {
-    core.debug(`stdout: ${data} `);
+    core.info(`stdout: ${data} `);
   };
-  core.debug('Now listing dot dot')
+  core.info('Now listing dot dot')
 
 
   const child2 = spawn('ls', ['-a', '-l', '..']);
 
   for await (const data of child2.stdout) {
-    core.debug(`stdout: ${data} `);
+    core.info(`stdout: ${data} `);
   };
 
 }
