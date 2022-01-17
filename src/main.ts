@@ -2,7 +2,6 @@ import * as constants from './constants'
 import * as core from '@actions/core'
 import * as path from 'path'
 import axios from 'axios'
-import request from "axios";
 import fs from 'fs'
 import util from 'util'
 
@@ -40,22 +39,32 @@ async function run(): Promise<void> {
   //TODO: Refactor so we don't need to do this check
   if (process.env['JEST_TESTS'] === 'true') return // skip running logic when importing class for npm test
 
+  await printLs()
+  await runAction()
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function printLs(): Promise<any> {
+
   // DEBUG
   // Print context
-  const { exec } = require('child_process');
-  exec('ls -la', (err, stdout, stderr) => {
-    if (err) {
-      //some err occurred
-      core.debug('There has been an error trying to run ls')
-      core.debug(err)
-    } else {
-      // the *entire* stdout and stderr (buffered)
-      core.debug(`stdout: ${stdout}`);
-      core.debug(`stderr: ${stderr}`);
-    }
-  });
+  // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
+  const { spawn } = require('child_process')
 
-  await runAction()
+  const child = spawn('ls', ['-a', '-l']);
+
+  for await (const data of child.stdout) {
+    core.debug(`stdout: ${data} `);
+  };
+  core.debug('Now listing dot dot')
+
+
+  const child2 = spawn('ls', ['-a', '-l', '..']);
+
+  for await (const data of child2.stdout) {
+    core.debug(`stdout: ${data} `);
+  };
+
 }
 
 //TODO: After generating objects with OpenAPI we should be able to have a Promise<ExecutionGraph>
@@ -136,14 +145,13 @@ export async function getExecutionGraph(
     //TODO: Handle response codes
     return response.data
   } catch (err) {
-    if (request.isAxiosError(err) && err.response) {
-      if (err.response.status == 404) {
+    if (axios.isAxiosError(err) && err.response) {
+      if (err.response.status === 404) {
         core.debug(`Could not find execution graph with id ${executionGraphId}`)
       }
-      console.log(util.inspect(err.response.data));
-      throw err;
+      throw err
     } else {
-      throw err;
+      throw err
     }
   }
 }
@@ -229,7 +237,6 @@ export async function getToken(input: CspInput): Promise<string> {
 }
 
 export async function loadConfig(): Promise<Config> {
-
   const pipeline = constants.DEFAULT_PIPELINE
   const baseFolder = constants.DEFAULT_BASE_FOLDER
 

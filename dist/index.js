@@ -111,6 +111,22 @@ function run() {
         //TODO: Refactor so we don't need to do this check
         if (process.env['JEST_TESTS'] === 'true')
             return; // skip running logic when importing class for npm test
+        // DEBUG
+        // Print context
+        // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
+        const { exec } = __nccwpck_require__(2081);
+        exec('ls -la', (err, stdout, stderr) => {
+            if (err) {
+                //some err occurred
+                core.debug('There has been an error trying to run ls');
+                core.debug(err);
+            }
+            else {
+                // the *entire* stdout and stderr (buffered)
+                core.debug(`stdout: ${stdout}`);
+                core.debug(`stderr: ${stderr}`);
+            }
+        });
         yield runAction();
     });
 }
@@ -170,9 +186,22 @@ function getExecutionGraph(executionGraphId) {
             throw new Error('VIB_PUBLIC_URL environment variable not found.');
         }
         const apiToken = yield getToken({ timeout: constants.CSP_TIMEOUT });
-        const response = yield vibClient.get(`/v1/execution-graphs/${executionGraphId}`, { headers: { Authorization: `Bearer ${apiToken}` } });
-        //TODO: Handle response codes
-        return response.data;
+        try {
+            const response = yield vibClient.get(`/v1/execution-graphs/${executionGraphId}`, { headers: { Authorization: `Bearer ${apiToken}` } });
+            //TODO: Handle response codes
+            return response.data;
+        }
+        catch (err) {
+            if (axios_1.default.isAxiosError(err) && err.response) {
+                if (err.response.status === 404) {
+                    core.debug(`Could not find execution graph with id ${executionGraphId}`);
+                }
+                throw err;
+            }
+            else {
+                throw err;
+            }
+        }
     });
 }
 exports.getExecutionGraph = getExecutionGraph;
@@ -6053,6 +6082,14 @@ exports.debug = debug; // for test
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
