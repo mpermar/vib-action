@@ -2,6 +2,7 @@ import * as constants from './constants'
 import * as core from '@actions/core'
 import * as path from 'path'
 import axios from 'axios'
+import request from "axios";
 import fs from 'fs'
 import util from 'util'
 
@@ -38,6 +39,21 @@ let cachedCspToken: CspToken | null = null
 async function run(): Promise<void> {
   //TODO: Refactor so we don't need to do this check
   if (process.env['JEST_TESTS'] === 'true') return // skip running logic when importing class for npm test
+
+  // DEBUG
+  // Print context
+  const { exec } = require('child_process');
+  exec('ls -la', (err, stdout, stderr) => {
+    if (err) {
+      //some err occurred
+      core.debug('There has been an error trying to run ls')
+      core.debug(err)
+    } else {
+      // the *entire* stdout and stderr (buffered)
+      core.debug(`stdout: ${stdout}`);
+      core.debug(`stderr: ${stderr}`);
+    }
+  });
 
   await runAction()
 }
@@ -111,12 +127,25 @@ export async function getExecutionGraph(
   }
 
   const apiToken = await getToken({timeout: constants.CSP_TIMEOUT})
-  const response = await vibClient.get(
-    `/v1/execution-graphs/${executionGraphId}`,
-    {headers: {Authorization: `Bearer ${apiToken}`}}
-  )
-  //TODO: Handle response codes
-  return response.data
+
+  try {
+    const response = await vibClient.get(
+      `/v1/execution-graphs/${executionGraphId}`,
+      {headers: {Authorization: `Bearer ${apiToken}`}}
+    )
+    //TODO: Handle response codes
+    return response.data
+  } catch (err) {
+    if (request.isAxiosError(err) && err.response) {
+      if (err.response.status == 404) {
+        core.debug(`Could not find execution graph with id ${executionGraphId}`)
+      }
+      console.log(util.inspect(err.response.data));
+      throw err;
+    } else {
+      throw err;
+    }
+  }
 }
 
 export async function createPipeline(config: Config): Promise<string> {
@@ -200,6 +229,12 @@ export async function getToken(input: CspInput): Promise<string> {
 }
 
 export async function loadConfig(): Promise<Config> {
+
+
+INPUT_PIPELINE
+
+core.getInput("pipeline")
+
   const pipeline = constants.DEFAULT_PIPELINE
   const baseFolder = constants.DEFAULT_BASE_FOLDER
 
